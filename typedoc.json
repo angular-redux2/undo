@@ -1,0 +1,12 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "name": "@Angular-redux2/undo",
+    "out": "docs",
+    "gaID": "G-PL8VCQ6RFS",
+    "entryPoints": [
+        "projects/angular-redux2/undo/src/public-api.ts"
+    ],
+    "compilerOptions": {
+        "skipLibCheck": true
+    }
+}

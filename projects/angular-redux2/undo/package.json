@@ -1,0 +1,32 @@
+{
+    "name": "@angular-redux2/undo",
+    "author": "Garfild (https://github.com/Garefild)",
+    "license": "Mozilla Public License Version 2.0",
+    "version": "1.0.0",
+    "homepage": "https://github.com/angular-redux2/undo",
+    "description": "Angular-redux2/undo is a library that provides undo/redo functionality to store",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/angular-redux2/undo.git"
+    },
+    "keywords": [
+        "angular",
+        "angular2",
+        "redux",
+        "store",
+        "state management",
+        "undo",
+        "redo",
+        "undo/redo"
+    ],
+    "peerDependencies": {
+        "redux": ">=4.2.1",
+        "@angular/core": "^15.2.0",
+        "@angular/common": "^15.2.0",
+        "@angular-redux2/store": "^5.0.0"
+    },
+    "dependencies": {
+        "tslib": "^2.3.0"
+    },
+    "sideEffects": false
+}
