@@ -31,12 +31,11 @@ export class NgUndoStateActions {
     protected key: string;
 
     /**
-     *
-     * @protected
+     * Represents the settings for an undo action.
      */
 
     protected settings: {
-        filter: () => boolean;
+        filter: (action: any, currentState: any, snapshot: any) => boolean;
         path: Array<string | number>
         limit: number;
     };
@@ -71,13 +70,14 @@ export class NgUndoStateActions {
      * It adds the given snapshot to the past states of the history.
      * If the snapshot is undefined, it returns the current state unchanged.
      *
+     * @param {NgUndoAction} action - The dispatched undo action object.
      * @param {any} currentState - The current state object.
      * @param {any} snapshot - The snapshot to insert into the history.
      * @returns {any} - The state object with the snapshot inserted into the history.
      */
 
-    insert(currentState: any, snapshot: any): any {
-        if (snapshot === undefined || !this.settings.filter()) {
+    insert(action: any, currentState: any, snapshot: any): any {
+        if (snapshot === undefined || !this.settings.filter(action, currentState, snapshot)) {
             return currentState;
         }
 

@@ -66,7 +66,7 @@ export class UndoService {
             state = this.watcherAction(state, action);
         }
 
-        return this.detectChange(state, next(state, action));
+        return this.detectChange(action, state, next(state, action));
     }
 
     /**
@@ -108,12 +108,13 @@ export class UndoService {
      * Detects changes in the state and inserts snapshots into the undo history when necessary.
      *
      * @protected
+     * @param {any} action - The dispatched action object.
      * @param {any} state - The current state object.
      * @param {any} newState - The updated state object.
      * @returns {any} - The updated state with inserted snapshots.
      */
 
-    protected detectChange(state: any, newState: any): any {
+    protected detectChange(action: any, state: any, newState: any): any {
         for (const propertyName in this.watchStateMap) {
             const undoAction = this.watchStateMap[propertyName];
 
@@ -121,7 +122,7 @@ export class UndoService {
             const sliceNewState = get(newState, undoAction.path);
 
             if (sliceNewState !== sliceState) {
-                newState = undoAction.insert(newState, sliceState);
+                newState = undoAction.insert(action, newState, sliceState);
             }
         }
 

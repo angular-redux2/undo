@@ -14,7 +14,7 @@ describe('NgUndoStateActions', () => {
             };
 
             const snapshot = 'new snapshot';
-            const nextState = undoStateActions.insert(currentState, snapshot);
+            const nextState = undoStateActions.insert({}, currentState, snapshot);
 
             expect(nextState).not.toBe(currentState);
             expect(nextState.data).toBe(currentState.data);
@@ -29,7 +29,7 @@ describe('NgUndoStateActions', () => {
             };
 
             const snapshot = undefined;
-            const nextState = undoStateActions.insert(currentState, snapshot);
+            const nextState = undoStateActions.insert({}, currentState, snapshot);
 
             expect(nextState).toBe(currentState); // Ensure the current state is returned
         });
@@ -45,7 +45,7 @@ describe('NgUndoStateActions', () => {
             const currentState = { [HISTORY_STATE_KEY]: { [key]: { past: [] } } };
             const snapshot = undefined;
             const actions = new NgUndoStateActions(key, settings);
-            const result = actions.insert(currentState, snapshot);
+            const result = actions.insert({}, currentState, snapshot);
 
 
             expect(result).toBe(currentState);
@@ -61,7 +61,7 @@ describe('NgUndoStateActions', () => {
             const currentState = { [HISTORY_STATE_KEY]: { [key]: { past: [] } } };
             const snapshot = 'snapshot';
             const actions = new NgUndoStateActions(key, settings);
-            const result = actions.insert(currentState, snapshot);
+            const result = actions.insert({}, currentState, snapshot);
 
             expect(result).toBe(currentState);
         });
@@ -85,7 +85,7 @@ describe('NgUndoStateActions', () => {
             };
 
             const actions = new NgUndoStateActions(key, settings);
-            const result = actions.insert(currentState, snapshot);
+            const result = actions.insert({}, currentState, snapshot);
 
             expect(result).toEqual(expectedState);
         });
@@ -113,7 +113,7 @@ describe('NgUndoStateActions', () => {
             };
 
             const actions = new NgUndoStateActions(key, settings);
-            const result = actions.insert(currentState, snapshot);
+            const result = actions.insert({}, currentState, snapshot);
 
             expect(result).toEqual(expectedState);
         });

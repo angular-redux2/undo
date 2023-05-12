@@ -112,7 +112,7 @@ export interface NgUndoAction {
 export interface StateWatchMap {
     [key: string]: {
         path: string;
-        filter?: () => boolean;
+        filter?: (action: any, currentState: any, snapshot: any) => boolean;
         limit?: number;
     }
 }
