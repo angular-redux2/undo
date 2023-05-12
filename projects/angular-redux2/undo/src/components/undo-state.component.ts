@@ -11,16 +11,16 @@ import { get, set } from '@angular-redux2/store';
 import { HISTORY_STATE_KEY } from '../interfaces/undo.interface';
 
 /**
+ * angular-redux2/undo types
+ */
+
+import type { Settings } from '../interfaces/undo.interface';
+
+/**
  * Represents the actions for managing undo state.
  */
 
 export class NgUndoStateActions {
-    /**
-     * The path to the key in the state object.
-     * @type {Array<string | number>}
-     */
-
-    path: Array<string | number>;
 
     /**
      * The key associated with the history.
@@ -31,16 +31,38 @@ export class NgUndoStateActions {
     protected key: string;
 
     /**
+     * Represents the settings for an undo action.
+     */
+
+    protected settings: {
+        filter: (action: any, currentState: any, snapshot: any) => boolean;
+        path: Array<string | number>
+        limit: number;
+    };
+
+    /**
      * Creates a new instance of the HistoryManager class.
      *
      * @param {string} key - The key associated with the history.
-     * @param {Array<string | number>} path - The path to the key in the state object.
+     * @param {Settings} settings - The settings for tracking the state action.
      * @constructor
      */
 
-    constructor(key: string, path: Array<string | number>) {
+    constructor(key: string, settings: Settings) {
         this.key = key;
-        this.path = path;
+        this.settings = Object.assign({
+            limit: 0,
+            filter: () => true
+        }, settings);
+    }
+
+    /**
+     * The path to the key in the state object.
+     * @return {Array<string | number>}
+     */
+
+    get path(): Array<string | number> {
+        return this.settings.path;
     }
 
     /**
@@ -48,19 +70,24 @@ export class NgUndoStateActions {
      * It adds the given snapshot to the past states of the history.
      * If the snapshot is undefined, it returns the current state unchanged.
      *
+     * @param {NgUndoAction} action - The dispatched undo action object.
      * @param {any} currentState - The current state object.
      * @param {any} snapshot - The snapshot to insert into the history.
      * @returns {any} - The state object with the snapshot inserted into the history.
      */
 
-    insert(currentState: any, snapshot: any): any {
-        if (snapshot === undefined) {
+    insert(action: any, currentState: any, snapshot: any): any {
+        if (snapshot === undefined || !this.settings.filter(action, currentState, snapshot)) {
             return currentState;
         }
 
         const { state, undoState } = this.getStates(currentState);
-
         undoState.future = [];
+
+        if (undoState.past.length >= this.settings.limit) {
+            undoState.past = undoState.past.slice(1);
+        }
+
         return set(state, [ HISTORY_STATE_KEY, this.key, 'past' ], [
             ...undoState.past,
             snapshot
@@ -80,7 +107,7 @@ export class NgUndoStateActions {
         const { state, undoState } = this.getStates(currentState);
 
         if (undoState.past.length === 0) {
-            return state;
+            return currentState;
         }
 
         const pastSnapshot = undoState.past.pop();
@@ -102,7 +129,7 @@ export class NgUndoStateActions {
         const { state, undoState } = this.getStates(currentState);
 
         if (undoState.future.length === 0) {
-            return state;
+            return currentState;
         }
 
         const futureSnapshot = undoState.future.shift();
@@ -160,15 +187,14 @@ export class NgUndoStateActions {
         const { state, undoState } = this.getStates(currentState);
 
         if (index < 0 || index >= undoState.future.length) {
-            return state;
+            return currentState;
         }
 
         const snapshot = get(state, this.path);
         const activeSnapshot = undoState.future[index];
         const future = undoState.future.slice(index + 1);
-        const past = undoState.past.concat([ snapshot ], undoState.future.slice(0, index));
 
-        undoState.past = past;
+        undoState.past = undoState.past.concat([ snapshot ], undoState.future.slice(0, index));
         undoState.future = future;
 
         return set(state, this.path, activeSnapshot);
@@ -186,7 +212,7 @@ export class NgUndoStateActions {
         const { state, undoState } = this.getStates(currentState);
 
         if (index < 0 || index >= undoState.past.length) {
-            return state;
+            return currentState;
         }
 
         const snapshot = get(state, this.path);

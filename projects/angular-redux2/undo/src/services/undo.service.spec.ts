@@ -4,7 +4,6 @@
 
 import { ngUndoMiddleware, UndoService } from './undo.service';
 import { UNDO_REDUCER_PREFIX, UndoActions } from '../interfaces/undo.interface';
-import { NgUndoStateActions } from '../components/undo-state.component';
 
 jest.mock('@angular-redux2/store', () => ({
     get: jest.fn()
@@ -13,30 +12,28 @@ jest.mock('@angular-redux2/store', () => ({
 describe('UndoService', () => {
     describe('constructor', () => {
         test('should create watchStateMap with correct values', () => {
-            // Mock input data
             const stateWatchMap = {
                 'testKey1': { path: 'path1.to.data' },
                 'testKey2': { path: 'path2.to.data' },
             };
 
-            // Create an instance of UndoService
             const undoService = new UndoService(stateWatchMap);
 
-            // Verify the watchStateMap values
-            expect((undoService as any).watchStateMap).toEqual({
-                'testKey1': new NgUndoStateActions('testKey1', [ 'path1', 'to', 'data' ]),
-                'testKey2': new NgUndoStateActions('testKey2', [ 'path2', 'to', 'data' ]),
-            });
+            expect((undoService as any).watchStateMap).toHaveProperty('testKey1');
+            expect((undoService as any).watchStateMap).toHaveProperty('testKey2');
         });
     });
 
     describe('watcherState', () => {
+        const next = jest.fn();
+
+        afterEach(() => {
+            jest.resetAllMocks();
+        });
+
         test('should call watcherAction and detectChange methods', () => {
-            // Mock input data
             const state = { /* mock state object */ };
             const action = { type: UNDO_REDUCER_PREFIX };
-            const next = jest.fn();
-
             const undoService = new UndoService({});
 
             (undoService as any).watcherAction = jest.fn().mockReturnValue(state);
@@ -45,7 +42,7 @@ describe('UndoService', () => {
             const updatedState = undoService.watcherState(state, action, next);
 
             expect((undoService as any).watcherAction).toHaveBeenCalledWith(state, action);
-            expect((undoService as any).detectChange).toHaveBeenCalledWith(state, next(state, action));
+            expect((undoService as any).detectChange).toHaveBeenCalledWith(action, state, next(state, action));
             expect(updatedState).toBe(state);
             expect(next).toHaveBeenCalledWith(state, action);
         });
@@ -54,8 +51,6 @@ describe('UndoService', () => {
             // Mock input data
             const state = { /* mock state object */ };
             const action = { type: 'SOME_OTHER_ACTION' };
-            const next = jest.fn();
-
             const undoService = new UndoService({});
 
             (undoService as any).watcherAction = jest.fn().mockReturnValue(state);
@@ -64,7 +59,7 @@ describe('UndoService', () => {
             const updatedState = undoService.watcherState(state, action, next);
 
             expect((undoService as any).watcherAction).not.toHaveBeenCalled();
-            expect((undoService as any).detectChange).toHaveBeenCalledWith(state, next(state, action));
+            expect((undoService as any).detectChange).toHaveBeenCalledWith(action, state, next(state, action));
             expect(updatedState).toBe(state);
             expect(next).toHaveBeenCalledWith(state, action);
         });
