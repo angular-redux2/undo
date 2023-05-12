@@ -33,6 +33,90 @@ describe('NgUndoStateActions', () => {
 
             expect(nextState).toBe(currentState); // Ensure the current state is returned
         });
+
+        test('should return the currentState if snapshot is undefined', () => {
+            const key = 'test';
+            const settings = {
+                path: [],
+                filter: () => true,
+                limit: 5
+            };
+
+            const currentState = { [HISTORY_STATE_KEY]: { [key]: { past: [] } } };
+            const snapshot = undefined;
+            const actions = new NgUndoStateActions(key, settings);
+            const result = actions.insert(currentState, snapshot);
+
+
+            expect(result).toBe(currentState);
+        });
+
+        test('should return the currentState if the filter function returns false', () => {
+            const key = 'test';
+            const settings = {
+                path: [],
+                filter: () => false,
+                limit: 5
+            };
+            const currentState = { [HISTORY_STATE_KEY]: { [key]: { past: [] } } };
+            const snapshot = 'snapshot';
+            const actions = new NgUndoStateActions(key, settings);
+            const result = actions.insert(currentState, snapshot);
+
+            expect(result).toBe(currentState);
+        });
+
+        test('should insert the snapshot into the past array and update the state', () => {
+            const key = 'test';
+            const settings = {
+                path: [],
+                filter: () => true,
+                limit: 5
+            };
+            const currentState = { [HISTORY_STATE_KEY]: { [key]: { past: [ 'past1', 'past2' ] } } };
+            const snapshot = 'snapshot';
+            const expectedState = {
+                [HISTORY_STATE_KEY]: {
+                    [key]: {
+                        past: [ 'past1', 'past2', 'snapshot' ],
+                        future: []
+                    }
+                }
+            };
+
+            const actions = new NgUndoStateActions(key, settings);
+            const result = actions.insert(currentState, snapshot);
+
+            expect(result).toEqual(expectedState);
+        });
+
+        test('should remove the oldest past snapshot if the past array exceeds the limit', () => {
+            const key = 'test';
+            const settings = {
+                path: [],
+                filter: () => true,
+                limit: 2
+            };
+            const currentState = {
+                [HISTORY_STATE_KEY]: {
+                    [key]: { past: [ 'past1', 'past2', 'past3' ] }
+                }
+            };
+            const snapshot = 'snapshot';
+            const expectedState = {
+                [HISTORY_STATE_KEY]: {
+                    [key]: {
+                        past: [ 'past2', 'past3', 'snapshot' ],
+                        future: []
+                    }
+                }
+            };
+
+            const actions = new NgUndoStateActions(key, settings);
+            const result = actions.insert(currentState, snapshot);
+
+            expect(result).toEqual(expectedState);
+        });
     });
 
     describe('undo', () => {

@@ -8,7 +8,13 @@ import { get, set } from '@angular-redux2/store';
  * angular-redux2/undo
  */
 
-import { HISTORY_STATE_KEY, Settings } from '../interfaces/undo.interface';
+import { HISTORY_STATE_KEY } from '../interfaces/undo.interface';
+
+/**
+ * angular-redux2/undo types
+ */
+
+import type { Settings } from '../interfaces/undo.interface';
 
 /**
  * Represents the actions for managing undo state.
@@ -76,8 +82,11 @@ export class NgUndoStateActions {
         }
 
         const { state, undoState } = this.getStates(currentState);
-
         undoState.future = [];
+
+        if (undoState.past.length >= this.settings.limit) {
+            undoState.past = undoState.past.slice(1);
+        }
 
         return set(state, [ HISTORY_STATE_KEY, this.key, 'past' ], [
             ...undoState.past,
@@ -184,9 +193,8 @@ export class NgUndoStateActions {
         const snapshot = get(state, this.path);
         const activeSnapshot = undoState.future[index];
         const future = undoState.future.slice(index + 1);
-        const past = undoState.past.concat([ snapshot ], undoState.future.slice(0, index));
 
-        undoState.past = past;
+        undoState.past = undoState.past.concat([ snapshot ], undoState.future.slice(0, index));
         undoState.future = future;
 
         return set(state, this.path, activeSnapshot);
