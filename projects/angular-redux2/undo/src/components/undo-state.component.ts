@@ -80,7 +80,7 @@ export class NgUndoStateActions {
         const { state, undoState } = this.getStates(currentState);
 
         if (undoState.past.length === 0) {
-            return state;
+            return currentState;
         }
 
         const pastSnapshot = undoState.past.pop();
@@ -102,7 +102,7 @@ export class NgUndoStateActions {
         const { state, undoState } = this.getStates(currentState);
 
         if (undoState.future.length === 0) {
-            return state;
+            return currentState;
         }
 
         const futureSnapshot = undoState.future.shift();
@@ -160,7 +160,7 @@ export class NgUndoStateActions {
         const { state, undoState } = this.getStates(currentState);
 
         if (index < 0 || index >= undoState.future.length) {
-            return state;
+            return currentState;
         }
 
         const snapshot = get(state, this.path);
@@ -186,7 +186,7 @@ export class NgUndoStateActions {
         const { state, undoState } = this.getStates(currentState);
 
         if (index < 0 || index >= undoState.past.length) {
-            return state;
+            return currentState;
         }
 
         const snapshot = get(state, this.path);
