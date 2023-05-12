@@ -2,7 +2,7 @@
     "name": "@angular-redux2/undo",
     "author": "Garfild (https://github.com/Garefild)",
     "license": "Mozilla Public License Version 2.0",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "homepage": "https://github.com/angular-redux2/undo",
     "description": "Angular-redux2/undo is a library that provides undo/redo functionality to store",
     "repository": {
