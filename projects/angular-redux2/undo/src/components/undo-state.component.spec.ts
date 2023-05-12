@@ -8,7 +8,7 @@ import { HISTORY_STATE_KEY } from '../interfaces/undo.interface';
 describe('NgUndoStateActions', () => {
     describe('insert', () => {
         test('should insert a snapshot into the past history', () => {
-            const undoStateActions = new NgUndoStateActions('key', [ 'path', 'to', 'watcher' ]);
+            const undoStateActions = new NgUndoStateActions('key', { path: [ 'path', 'to', 'watcher' ] });
             const currentState = {
                 data: 'initial data'
             };
@@ -23,7 +23,7 @@ describe('NgUndoStateActions', () => {
         });
 
         test('should return the current state if the snapshot is undefined', () => {
-            const undoStateActions = new NgUndoStateActions('key', [ 'path', 'to', 'watcher' ]);
+            const undoStateActions = new NgUndoStateActions('key', { path: [ 'path', 'to', 'watcher' ] });
             const currentState = {
                 data: 'initial data'
             };
@@ -37,7 +37,7 @@ describe('NgUndoStateActions', () => {
 
     describe('undo', () => {
         test('should undo the last snapshot in the past history', () => {
-            const undoStateActions = new NgUndoStateActions('key', [ 'path', 'to', 'watcher' ]);
+            const undoStateActions = new NgUndoStateActions('key', { path: [ 'path', 'to', 'watcher' ] });
             const currentState = {
                 data: 'initial data',
                 [HISTORY_STATE_KEY]: {
@@ -63,7 +63,7 @@ describe('NgUndoStateActions', () => {
         });
 
         test('should return the current state if there are no snapshots in the past history', () => {
-            const undoStateActions = new NgUndoStateActions('key', [ 'path', 'to', 'watcher' ]);
+            const undoStateActions = new NgUndoStateActions('key', { path: [ 'path', 'to', 'watcher' ] });
             const currentState = {
                 data: 'initial data',
                 [HISTORY_STATE_KEY]: {
@@ -87,7 +87,7 @@ describe('NgUndoStateActions', () => {
 
     describe('redo', () => {
         test('should redo the last snapshot in the future history', () => {
-            const undoStateActions = new NgUndoStateActions('key', [ 'path', 'to', 'watcher' ]);
+            const undoStateActions = new NgUndoStateActions('key', { path: [ 'path', 'to', 'watcher' ] });
             const currentState = {
                 data: 'initial data',
                 [HISTORY_STATE_KEY]: {
@@ -113,7 +113,7 @@ describe('NgUndoStateActions', () => {
         });
 
         test('should return the current state if there are no snapshots in the future history', () => {
-            const undoStateActions = new NgUndoStateActions('key', [ 'path', 'to', 'watcher' ]);
+            const undoStateActions = new NgUndoStateActions('key', { path: [ 'path', 'to', 'watcher' ] });
             const currentState = {
                 data: 'initial data',
                 [HISTORY_STATE_KEY]: {
@@ -137,7 +137,7 @@ describe('NgUndoStateActions', () => {
 
     describe('jump', () => {
         test('should jump to the specified index in the future history', () => {
-            const undoStateActions = new NgUndoStateActions('key', [ 'path', 'to', 'watcher' ]);
+            const undoStateActions = new NgUndoStateActions('key', { path: [ 'path', 'to', 'watcher' ] });
             const currentState = {
                 data: 'initial data',
                 [HISTORY_STATE_KEY]: {
@@ -164,7 +164,7 @@ describe('NgUndoStateActions', () => {
         });
 
         test('should jump to the specified index in the past history', () => {
-            const undoStateActions = new NgUndoStateActions('key', [ 'path', 'to', 'watcher' ]);
+            const undoStateActions = new NgUndoStateActions('key', { path: [ 'path', 'to', 'watcher' ] });
             const currentState = {
                 data: 'initial data',
                 [HISTORY_STATE_KEY]: {
@@ -191,7 +191,7 @@ describe('NgUndoStateActions', () => {
         });
 
         test('should return the current state if the index is zero', () => {
-            const undoStateActions = new NgUndoStateActions('key', [ 'path', 'to', 'watcher' ]);
+            const undoStateActions = new NgUndoStateActions('key', { path: [ 'path', 'to', 'watcher' ] });
             const currentState = {
                 data: 'initial data',
                 [HISTORY_STATE_KEY]: {
@@ -215,7 +215,7 @@ describe('NgUndoStateActions', () => {
         });
 
         test('should return the current state if the index is out of range', () => {
-            const undoStateActions = new NgUndoStateActions('key', [ 'path', 'to', 'watcher' ]);
+            const undoStateActions = new NgUndoStateActions('key', { path: [ 'path', 'to', 'watcher' ] });
             const currentState = {
                 data: 'initial data',
                 [HISTORY_STATE_KEY]: {

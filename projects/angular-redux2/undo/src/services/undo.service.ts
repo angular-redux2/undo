@@ -45,7 +45,10 @@ export class UndoService {
 
     constructor(stateWatchMap: StateWatchMap) {
         for (const key in stateWatchMap) {
-            this.watchStateMap[key] = new NgUndoStateActions(key, stateWatchMap[key].path.split('.'));
+            const settings: any = { ...stateWatchMap[key] };
+            settings.path = settings.path.split('.');
+
+            this.watchStateMap[key] = new NgUndoStateActions(key, settings);
         }
     }
 

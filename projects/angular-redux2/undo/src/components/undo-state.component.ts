@@ -8,19 +8,13 @@ import { get, set } from '@angular-redux2/store';
  * angular-redux2/undo
  */
 
-import { HISTORY_STATE_KEY } from '../interfaces/undo.interface';
+import { HISTORY_STATE_KEY, Settings } from '../interfaces/undo.interface';
 
 /**
  * Represents the actions for managing undo state.
  */
 
 export class NgUndoStateActions {
-    /**
-     * The path to the key in the state object.
-     * @type {Array<string | number>}
-     */
-
-    path: Array<string | number>;
 
     /**
      * The key associated with the history.
@@ -31,16 +25,39 @@ export class NgUndoStateActions {
     protected key: string;
 
     /**
+     *
+     * @protected
+     */
+
+    protected settings: {
+        filter: () => boolean;
+        path: Array<string | number>
+        limit: number;
+    };
+
+    /**
      * Creates a new instance of the HistoryManager class.
      *
      * @param {string} key - The key associated with the history.
-     * @param {Array<string | number>} path - The path to the key in the state object.
+     * @param {Settings} settings - The settings for tracking the state action.
      * @constructor
      */
 
-    constructor(key: string, path: Array<string | number>) {
+    constructor(key: string, settings: Settings) {
         this.key = key;
-        this.path = path;
+        this.settings = Object.assign({
+            limit: 0,
+            filter: () => true
+        }, settings);
+    }
+
+    /**
+     * The path to the key in the state object.
+     * @return {Array<string | number>}
+     */
+
+    get path(): Array<string | number> {
+        return this.settings.path;
     }
 
     /**
@@ -61,6 +78,7 @@ export class NgUndoStateActions {
         const { state, undoState } = this.getStates(currentState);
 
         undoState.future = [];
+
         return set(state, [ HISTORY_STATE_KEY, this.key, 'past' ], [
             ...undoState.past,
             snapshot

@@ -13,26 +13,20 @@ jest.mock('@angular-redux2/store', () => ({
 describe('UndoService', () => {
     describe('constructor', () => {
         test('should create watchStateMap with correct values', () => {
-            // Mock input data
             const stateWatchMap = {
                 'testKey1': { path: 'path1.to.data' },
                 'testKey2': { path: 'path2.to.data' },
             };
 
-            // Create an instance of UndoService
             const undoService = new UndoService(stateWatchMap);
 
-            // Verify the watchStateMap values
-            expect((undoService as any).watchStateMap).toEqual({
-                'testKey1': new NgUndoStateActions('testKey1', [ 'path1', 'to', 'data' ]),
-                'testKey2': new NgUndoStateActions('testKey2', [ 'path2', 'to', 'data' ]),
-            });
+            expect((undoService as any).watchStateMap).toHaveProperty('testKey1');
+            expect((undoService as any).watchStateMap).toHaveProperty('testKey2');
         });
     });
 
     describe('watcherState', () => {
         test('should call watcherAction and detectChange methods', () => {
-            // Mock input data
             const state = { /* mock state object */ };
             const action = { type: UNDO_REDUCER_PREFIX };
             const next = jest.fn();

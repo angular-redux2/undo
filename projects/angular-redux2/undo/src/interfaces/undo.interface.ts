@@ -111,6 +111,23 @@ export interface NgUndoAction {
 
 export interface StateWatchMap {
     [key: string]: {
-        path: string
+        path: string;
+        filter?: () => boolean;
+        limit?: number;
     }
+}
+
+/**
+ * Represents the settings for tracking a specific property in the state for undo/redo operations.
+ *
+ * @param path - The path to the property in the state object. It is represented as an array of strings and numbers.
+ * @param limit - (Optional) The maximum number of actions to keep in the undo/redo history.
+ * If not specified, all actions will be kept.
+ * @param filter - (Optional) A filter function that determines whether an action should be included in the undo/redo history.
+ */
+
+export interface Settings {
+    path: Array<string | number>;
+    filter?: () => boolean;
+    limit?: number;
 }
