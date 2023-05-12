@@ -71,7 +71,7 @@ export class NgUndoStateActions {
      */
 
     insert(currentState: any, snapshot: any): any {
-        if (snapshot === undefined) {
+        if (snapshot === undefined || !this.settings.filter()) {
             return currentState;
         }
 
