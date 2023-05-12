@@ -23,7 +23,7 @@
         "redux": ">=4.2.1",
         "@angular/core": "^15.2.0",
         "@angular/common": "^15.2.0",
-        "@angular-redux2/store": "^5.0.0"
+        "@angular-redux2/store": "^5.0.2"
     },
     "dependencies": {
         "tslib": "^2.3.0"
